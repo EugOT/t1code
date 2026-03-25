@@ -7033,24 +7033,7 @@ export function App({
                 marginRight={1}
                 onPress={() => restoreDefaultSettings()}
               />
-            ) : mainView === "keybindings" ? (
-              <ToolbarButton
-                icon="󰌌"
-                label={
-                  responsiveLayout.showComposerModeLabels
-                    ? isOpeningKeybindings
-                      ? "Opening..."
-                      : "Open file"
-                    : undefined
-                }
-                compact={!responsiveLayout.showComposerModeLabels}
-                disabled={!serverConfig?.keybindingsConfigPath || isOpeningKeybindings}
-                marginRight={1}
-                onPress={() => {
-                  void openKeybindingsFile();
-                }}
-              />
-            ) : (
+            ) : mainView === "keybindings" ? null : (
               <>
                 <ToolbarButton
                   icon={gitActionBusy ? "󱦟" : "󰊢"}
