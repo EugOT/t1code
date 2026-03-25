@@ -12,12 +12,8 @@ _T3Code, but in your terminal._
 
 </div>
 
-## Install
-
 ```bash
 npx @maria_rcks/t1code
 ```
 
-## Credits
-
-- T3 Code credits: [@t3dotgg](https://github.com/t3dotgg) and [@juliusmarminge](https://github.com/juliusmarminge)
+<sub>Based on T3 Code by [@t3dotgg](https://github.com/t3dotgg) and [@juliusmarminge](https://github.com/juliusmarminge).</sub>
