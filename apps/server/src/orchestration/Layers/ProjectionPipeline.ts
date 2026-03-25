@@ -362,7 +362,7 @@ const makeOrchestrationProjectionPipeline = Effect.gen(function* () {
             projectId: event.payload.projectId,
             title: event.payload.title,
             workspaceRoot: event.payload.workspaceRoot,
-            defaultModelSelection: event.payload.defaultModelSelection,
+            defaultModel: event.payload.defaultModel,
             scripts: event.payload.scripts,
             createdAt: event.payload.createdAt,
             updatedAt: event.payload.updatedAt,
@@ -383,8 +383,8 @@ const makeOrchestrationProjectionPipeline = Effect.gen(function* () {
             ...(event.payload.workspaceRoot !== undefined
               ? { workspaceRoot: event.payload.workspaceRoot }
               : {}),
-            ...(event.payload.defaultModelSelection !== undefined
-              ? { defaultModelSelection: event.payload.defaultModelSelection }
+            ...(event.payload.defaultModel !== undefined
+              ? { defaultModel: event.payload.defaultModel }
               : {}),
             ...(event.payload.scripts !== undefined ? { scripts: event.payload.scripts } : {}),
             updatedAt: event.payload.updatedAt,
@@ -420,7 +420,7 @@ const makeOrchestrationProjectionPipeline = Effect.gen(function* () {
             threadId: event.payload.threadId,
             projectId: event.payload.projectId,
             title: event.payload.title,
-            modelSelection: event.payload.modelSelection,
+            model: event.payload.model,
             runtimeMode: event.payload.runtimeMode,
             interactionMode: event.payload.interactionMode,
             branch: event.payload.branch,
@@ -442,9 +442,7 @@ const makeOrchestrationProjectionPipeline = Effect.gen(function* () {
           yield* projectionThreadRepository.upsert({
             ...existingRow.value,
             ...(event.payload.title !== undefined ? { title: event.payload.title } : {}),
-            ...(event.payload.modelSelection !== undefined
-              ? { modelSelection: event.payload.modelSelection }
-              : {}),
+            ...(event.payload.model !== undefined ? { model: event.payload.model } : {}),
             ...(event.payload.branch !== undefined ? { branch: event.payload.branch } : {}),
             ...(event.payload.worktreePath !== undefined
               ? { worktreePath: event.payload.worktreePath }

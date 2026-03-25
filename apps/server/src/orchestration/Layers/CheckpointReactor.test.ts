@@ -282,10 +282,7 @@ describe("CheckpointReactor", () => {
         projectId: asProjectId("project-1"),
         title: "Test Project",
         workspaceRoot: options?.projectWorkspaceRoot ?? cwd,
-        defaultModelSelection: {
-          provider: "codex",
-          model: "gpt-5-codex",
-        },
+        defaultModel: "gpt-5-codex",
         createdAt,
       }),
     );
@@ -296,10 +293,7 @@ describe("CheckpointReactor", () => {
         threadId: ThreadId.makeUnsafe("thread-1"),
         projectId: asProjectId("project-1"),
         title: "Thread",
-        modelSelection: {
-          provider: "codex",
-          model: "gpt-5-codex",
-        },
+        model: "gpt-5-codex",
         interactionMode: DEFAULT_PROVIDER_INTERACTION_MODE,
         runtimeMode: "approval-required",
         branch: null,

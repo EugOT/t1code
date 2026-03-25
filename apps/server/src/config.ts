@@ -10,7 +10,7 @@ import { Effect, FileSystem, Layer, Path, ServiceMap } from "effect";
 
 export const DEFAULT_PORT = 3773;
 
-export type RuntimeMode = "web" | "desktop";
+export type RuntimeMode = "web" | "desktop" | "tui";
 
 /**
  * ServerDerivedPaths - Derived paths from the base directory.

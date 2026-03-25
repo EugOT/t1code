@@ -72,10 +72,7 @@ describe("OrchestrationEngine", () => {
         projectId: asProjectId("project-1"),
         title: "Project 1",
         workspaceRoot: "/tmp/project-1",
-        defaultModelSelection: {
-          provider: "codex",
-          model: "gpt-5-codex",
-        },
+        defaultModel: "gpt-5-codex",
         createdAt,
       }),
     );
@@ -86,10 +83,7 @@ describe("OrchestrationEngine", () => {
         threadId: ThreadId.makeUnsafe("thread-1"),
         projectId: asProjectId("project-1"),
         title: "Thread",
-        modelSelection: {
-          provider: "codex",
-          model: "gpt-5-codex",
-        },
+        model: "gpt-5-codex",
         interactionMode: DEFAULT_PROVIDER_INTERACTION_MODE,
         runtimeMode: "approval-required",
         branch: null,
@@ -132,10 +126,7 @@ describe("OrchestrationEngine", () => {
         projectId: asProjectId("project-replay"),
         title: "Replay Project",
         workspaceRoot: "/tmp/project-replay",
-        defaultModelSelection: {
-          provider: "codex",
-          model: "gpt-5-codex",
-        },
+        defaultModel: "gpt-5-codex",
         createdAt,
       }),
     );
@@ -146,10 +137,7 @@ describe("OrchestrationEngine", () => {
         threadId: ThreadId.makeUnsafe("thread-replay"),
         projectId: asProjectId("project-replay"),
         title: "replay",
-        modelSelection: {
-          provider: "codex",
-          model: "gpt-5-codex",
-        },
+        model: "gpt-5-codex",
         interactionMode: DEFAULT_PROVIDER_INTERACTION_MODE,
         runtimeMode: "approval-required",
         branch: null,
@@ -190,10 +178,7 @@ describe("OrchestrationEngine", () => {
         projectId: asProjectId("project-stream"),
         title: "Stream Project",
         workspaceRoot: "/tmp/project-stream",
-        defaultModelSelection: {
-          provider: "codex",
-          model: "gpt-5-codex",
-        },
+        defaultModel: "gpt-5-codex",
         createdAt,
       }),
     );
@@ -214,10 +199,7 @@ describe("OrchestrationEngine", () => {
           threadId: ThreadId.makeUnsafe("thread-stream"),
           projectId: asProjectId("project-stream"),
           title: "domain-stream",
-          modelSelection: {
-            provider: "codex",
-            model: "gpt-5-codex",
-          },
+          model: "gpt-5-codex",
           interactionMode: DEFAULT_PROVIDER_INTERACTION_MODE,
           runtimeMode: "approval-required",
           branch: null,
@@ -251,10 +233,7 @@ describe("OrchestrationEngine", () => {
         projectId: asProjectId("project-turn-diff"),
         title: "Turn Diff Project",
         workspaceRoot: "/tmp/project-turn-diff",
-        defaultModelSelection: {
-          provider: "codex",
-          model: "gpt-5-codex",
-        },
+        defaultModel: "gpt-5-codex",
         createdAt,
       }),
     );
@@ -265,10 +244,7 @@ describe("OrchestrationEngine", () => {
         threadId: ThreadId.makeUnsafe("thread-turn-diff"),
         projectId: asProjectId("project-turn-diff"),
         title: "Turn diff thread",
-        modelSelection: {
-          provider: "codex",
-          model: "gpt-5-codex",
-        },
+        model: "gpt-5-codex",
         interactionMode: DEFAULT_PROVIDER_INTERACTION_MODE,
         runtimeMode: "approval-required",
         branch: null,
@@ -368,10 +344,7 @@ describe("OrchestrationEngine", () => {
         projectId: asProjectId("project-flaky"),
         title: "Flaky Project",
         workspaceRoot: "/tmp/project-flaky",
-        defaultModelSelection: {
-          provider: "codex",
-          model: "gpt-5-codex",
-        },
+        defaultModel: "gpt-5-codex",
         createdAt,
       }),
     );
@@ -384,10 +357,7 @@ describe("OrchestrationEngine", () => {
           threadId: ThreadId.makeUnsafe("thread-flaky-fail"),
           projectId: asProjectId("project-flaky"),
           title: "flaky-fail",
-          modelSelection: {
-            provider: "codex",
-            model: "gpt-5-codex",
-          },
+          model: "gpt-5-codex",
           interactionMode: DEFAULT_PROVIDER_INTERACTION_MODE,
           runtimeMode: "approval-required",
           branch: null,
@@ -404,10 +374,7 @@ describe("OrchestrationEngine", () => {
         threadId: ThreadId.makeUnsafe("thread-flaky-ok"),
         projectId: asProjectId("project-flaky"),
         title: "flaky-ok",
-        modelSelection: {
-          provider: "codex",
-          model: "gpt-5-codex",
-        },
+        model: "gpt-5-codex",
         interactionMode: DEFAULT_PROVIDER_INTERACTION_MODE,
         runtimeMode: "approval-required",
         branch: null,
@@ -461,10 +428,7 @@ describe("OrchestrationEngine", () => {
         projectId: asProjectId("project-atomic"),
         title: "Atomic Project",
         workspaceRoot: "/tmp/project-atomic",
-        defaultModelSelection: {
-          provider: "codex",
-          model: "gpt-5-codex",
-        },
+        defaultModel: "gpt-5-codex",
         createdAt,
       }),
     );
@@ -475,10 +439,7 @@ describe("OrchestrationEngine", () => {
         threadId: ThreadId.makeUnsafe("thread-atomic"),
         projectId: asProjectId("project-atomic"),
         title: "atomic",
-        modelSelection: {
-          provider: "codex",
-          model: "gpt-5-codex",
-        },
+        model: "gpt-5-codex",
         interactionMode: DEFAULT_PROVIDER_INTERACTION_MODE,
         runtimeMode: "approval-required",
         branch: null,
@@ -602,10 +563,7 @@ describe("OrchestrationEngine", () => {
         projectId: asProjectId("project-sync"),
         title: "Sync Project",
         workspaceRoot: "/tmp/project-sync",
-        defaultModelSelection: {
-          provider: "codex",
-          model: "gpt-5-codex",
-        },
+        defaultModel: "gpt-5-codex",
         createdAt,
       }),
     );
@@ -616,10 +574,7 @@ describe("OrchestrationEngine", () => {
         threadId: ThreadId.makeUnsafe("thread-sync"),
         projectId: asProjectId("project-sync"),
         title: "sync-before",
-        modelSelection: {
-          provider: "codex",
-          model: "gpt-5-codex",
-        },
+        model: "gpt-5-codex",
         interactionMode: DEFAULT_PROVIDER_INTERACTION_MODE,
         runtimeMode: "approval-required",
         branch: null,
@@ -687,10 +642,7 @@ describe("OrchestrationEngine", () => {
         projectId: asProjectId("project-duplicate"),
         title: "Duplicate Project",
         workspaceRoot: "/tmp/project-duplicate",
-        defaultModelSelection: {
-          provider: "codex",
-          model: "gpt-5-codex",
-        },
+        defaultModel: "gpt-5-codex",
         createdAt,
       }),
     );
@@ -702,10 +654,7 @@ describe("OrchestrationEngine", () => {
         threadId: ThreadId.makeUnsafe("thread-duplicate"),
         projectId: asProjectId("project-duplicate"),
         title: "duplicate",
-        modelSelection: {
-          provider: "codex",
-          model: "gpt-5-codex",
-        },
+        model: "gpt-5-codex",
         interactionMode: DEFAULT_PROVIDER_INTERACTION_MODE,
         runtimeMode: "approval-required",
         branch: null,
@@ -722,10 +671,7 @@ describe("OrchestrationEngine", () => {
           threadId: ThreadId.makeUnsafe("thread-duplicate"),
           projectId: asProjectId("project-duplicate"),
           title: "duplicate",
-          modelSelection: {
-            provider: "codex",
-            model: "gpt-5-codex",
-          },
+          model: "gpt-5-codex",
           interactionMode: DEFAULT_PROVIDER_INTERACTION_MODE,
           runtimeMode: "approval-required",
           branch: null,

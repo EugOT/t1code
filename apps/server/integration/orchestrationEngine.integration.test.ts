@@ -11,7 +11,6 @@ import {
   ProjectId,
   ProviderKind,
   ThreadId,
-  ModelSelection,
 } from "@t3tools/contracts";
 import { assert, it } from "@effect/vitest";
 import { Effect, Option, Schema } from "effect";
@@ -116,10 +115,7 @@ const seedProjectAndThread = (harness: OrchestrationIntegrationHarness) =>
       projectId: PROJECT_ID,
       title: "Integration Project",
       workspaceRoot: harness.workspaceDir,
-      defaultModelSelection: {
-        provider,
-        model: defaultModel,
-      },
+      defaultModel,
       createdAt,
     });
 
@@ -129,10 +125,7 @@ const seedProjectAndThread = (harness: OrchestrationIntegrationHarness) =>
       threadId: THREAD_ID,
       projectId: PROJECT_ID,
       title: "Integration Thread",
-      modelSelection: {
-        provider,
-        model: defaultModel,
-      },
+      model: defaultModel,
       interactionMode: DEFAULT_PROVIDER_INTERACTION_MODE,
       runtimeMode: "approval-required",
       branch: null,
@@ -146,7 +139,7 @@ const startTurn = (input: {
   readonly commandId: string;
   readonly messageId: string;
   readonly text: string;
-  readonly modelSelection?: ModelSelection;
+  readonly provider?: IntegrationProvider;
 }) =>
   input.harness.engine.dispatch({
     type: "thread.turn.start",
@@ -158,11 +151,7 @@ const startTurn = (input: {
       text: input.text,
       attachments: [],
     },
-    ...(input.modelSelection !== undefined
-      ? {
-          modelSelection: input.modelSelection,
-        }
-      : {}),
+    ...(input.provider !== undefined ? { provider: input.provider } : {}),
     interactionMode: DEFAULT_PROVIDER_INTERACTION_MODE,
     runtimeMode: "approval-required",
     createdAt: nowIso(),
@@ -265,10 +254,7 @@ it.live.skipIf(!process.env.CODEX_BINARY_PATH)(
           projectId: PROJECT_ID,
           title: "Integration Project",
           workspaceRoot: harness.workspaceDir,
-          defaultModelSelection: {
-            provider: "codex",
-            model: "gpt-5.3-codex",
-          },
+          defaultModel: "gpt-5.3-codex",
           createdAt,
         });
 
@@ -278,10 +264,7 @@ it.live.skipIf(!process.env.CODEX_BINARY_PATH)(
           threadId: THREAD_ID,
           projectId: PROJECT_ID,
           title: "Integration Thread",
-          modelSelection: {
-            provider: "codex",
-            model: "gpt-5.3-codex",
-          },
+          model: "gpt-5.3-codex",
           interactionMode: DEFAULT_PROVIDER_INTERACTION_MODE,
           runtimeMode: "full-access",
           branch: null,
@@ -939,10 +922,7 @@ it.live("starts a claudeAgent session on first turn when provider is requested",
           commandId: "cmd-turn-start-claude-initial",
           messageId: "msg-user-claude-initial",
           text: "Use Claude",
-          modelSelection: {
-            provider: "claudeAgent",
-            model: "claude-sonnet-4-6",
-          },
+          provider: "claudeAgent",
         });
 
         const thread = yield* harness.waitForThread(
@@ -996,10 +976,7 @@ it.live("recovers claudeAgent sessions after provider stopAll using persisted re
           commandId: "cmd-turn-start-claude-recover-1",
           messageId: "msg-user-claude-recover-1",
           text: "Before restart",
-          modelSelection: {
-            provider: "claudeAgent",
-            model: "claude-sonnet-4-6",
-          },
+          provider: "claudeAgent",
         });
 
         yield* harness.waitForThread(
@@ -1106,10 +1083,7 @@ it.live("forwards claudeAgent approval responses to the provider session", () =>
           commandId: "cmd-turn-start-claude-approval",
           messageId: "msg-user-claude-approval",
           text: "Need approval",
-          modelSelection: {
-            provider: "claudeAgent",
-            model: "claude-sonnet-4-6",
-          },
+          provider: "claudeAgent",
         });
 
         const thread = yield* harness.waitForThread(THREAD_ID, (entry) =>
@@ -1178,10 +1152,7 @@ it.live("forwards thread.turn.interrupt to claudeAgent provider sessions", () =>
           commandId: "cmd-turn-start-claude-interrupt",
           messageId: "msg-user-claude-interrupt",
           text: "Start long turn",
-          modelSelection: {
-            provider: "claudeAgent",
-            model: "claude-sonnet-4-6",
-          },
+          provider: "claudeAgent",
         });
 
         const thread = yield* harness.waitForThread(
@@ -1251,10 +1222,7 @@ it.live("reverts claudeAgent turns and rolls back provider conversation state", 
           commandId: "cmd-turn-start-claude-revert-1",
           messageId: "msg-user-claude-revert-1",
           text: "First Claude edit",
-          modelSelection: {
-            provider: "claudeAgent",
-            model: "claude-sonnet-4-6",
-          },
+          provider: "claudeAgent",
         });
 
         yield* harness.waitForThread(

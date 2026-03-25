@@ -703,19 +703,13 @@ describe("WebSocket Server", () => {
         id: string;
         workspaceRoot: string;
         title: string;
-        defaultModelSelection: {
-          provider: string;
-          model: string;
-        } | null;
+        defaultModel: string | null;
       }>;
       threads: Array<{
         id: string;
         projectId: string;
         title: string;
-        modelSelection: {
-          provider: string;
-          model: string;
-        };
+        model: string;
         branch: string | null;
         worktreePath: string | null;
       }>;
@@ -731,10 +725,7 @@ describe("WebSocket Server", () => {
           id: bootstrapProjectId,
           workspaceRoot: "/test/bootstrap-workspace",
           title: "bootstrap-workspace",
-          defaultModelSelection: {
-            provider: "codex",
-            model: "gpt-5-codex",
-          },
+          defaultModel: "gpt-5-codex",
         }),
       ]),
     );
@@ -744,10 +735,7 @@ describe("WebSocket Server", () => {
           id: bootstrapThreadId,
           projectId: bootstrapProjectId,
           title: "New thread",
-          modelSelection: {
-            provider: "codex",
-            model: "gpt-5-codex",
-          },
+          model: "gpt-5-codex",
           branch: null,
           worktreePath: null,
         }),
@@ -1204,10 +1192,7 @@ describe("WebSocket Server", () => {
       projectId: "project-diff",
       title: "Diff Project",
       workspaceRoot,
-      defaultModelSelection: {
-        provider: "codex",
-        model: "gpt-5-codex",
-      },
+      defaultModel: "gpt-5-codex",
       createdAt,
     });
     expect(createProjectResponse.error).toBeUndefined();
@@ -1217,10 +1202,7 @@ describe("WebSocket Server", () => {
       threadId: "thread-diff",
       projectId: "project-diff",
       title: "Diff Thread",
-      modelSelection: {
-        provider: "codex",
-        model: "gpt-5-codex",
-      },
+      model: "gpt-5-codex",
       runtimeMode: "full-access",
       interactionMode: "default",
       branch: null,
@@ -1288,10 +1270,7 @@ describe("WebSocket Server", () => {
       projectId: "project-1",
       title: "WS Project",
       workspaceRoot,
-      defaultModelSelection: {
-        provider: "codex",
-        model: "gpt-5-codex",
-      },
+      defaultModel: "gpt-5-codex",
       createdAt,
     });
     expect(createProjectResponse.error).toBeUndefined();
@@ -1301,10 +1280,7 @@ describe("WebSocket Server", () => {
       threadId: "thread-1",
       projectId: "project-1",
       title: "Thread 1",
-      modelSelection: {
-        provider: "codex",
-        model: "gpt-5-codex",
-      },
+      model: "gpt-5-codex",
       runtimeMode: "full-access",
       interactionMode: "default",
       branch: null,

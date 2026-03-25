@@ -188,10 +188,9 @@ validationLayer("CodexAdapterLive validation", (it) => {
       yield* adapter.startSession({
         provider: "codex",
         threadId: asThreadId("thread-1"),
-        modelSelection: {
-          provider: "codex",
-          model: "gpt-5.3-codex",
-          options: {
+        model: "gpt-5.3-codex",
+        modelOptions: {
+          codex: {
             fastMode: true,
           },
         },
@@ -257,10 +256,9 @@ sessionErrorLayer("CodexAdapterLive session errors", (it) => {
         adapter.sendTurn({
           threadId: asThreadId("sess-missing"),
           input: "hello",
-          modelSelection: {
-            provider: "codex",
-            model: "gpt-5.3-codex",
-            options: {
+          model: "gpt-5.3-codex",
+          modelOptions: {
+            codex: {
               reasoningEffort: "high",
               fastMode: true,
             },
@@ -842,67 +840,50 @@ lifecycleLayer("CodexAdapterLive lifecycle", (it) => {
     }),
   );
 
-  it.effect("unwraps Codex token usage payloads for context window events", () =>
+  it.effect("maps thread rename notifications from current Codex payload shapes", () =>
     Effect.gen(function* () {
       const adapter = yield* CodexAdapter;
-      const firstEventFiber = yield* Stream.runHead(adapter.streamEvents).pipe(Effect.forkChild);
+      const eventsFiber = yield* Stream.runCollect(Stream.take(adapter.streamEvents, 2)).pipe(
+        Effect.forkChild,
+      );
 
       lifecycleManager.emit("event", {
-        id: asEventId("evt-codex-thread-token-usage-updated"),
+        id: asEventId("evt-thread-name-updated-legacy"),
         kind: "notification",
         provider: "codex",
         threadId: asThreadId("thread-1"),
-        turnId: asTurnId("turn-1"),
         createdAt: new Date().toISOString(),
-        method: "thread/tokenUsage/updated",
+        method: "thread/name/updated",
         payload: {
-          threadId: "thread-1",
-          turnId: "turn-1",
-          tokenUsage: {
-            total: {
-              inputTokens: 11_833,
-              cachedInputTokens: 3456,
-              outputTokens: 6,
-              reasoningOutputTokens: 0,
-              totalTokens: 11_839,
-            },
-            last: {
-              inputTokens: 120,
-              cachedInputTokens: 0,
-              outputTokens: 6,
-              reasoningOutputTokens: 0,
-              totalTokens: 126,
-            },
-            modelContextWindow: 258_400,
+          threadName: "Legacy thread name",
+        },
+      } satisfies ProviderEvent);
+
+      lifecycleManager.emit("event", {
+        id: asEventId("evt-thread-name-updated-current"),
+        kind: "notification",
+        provider: "codex",
+        threadId: asThreadId("thread-1"),
+        createdAt: new Date().toISOString(),
+        method: "thread/name/updated",
+        payload: {
+          name: "Current thread name",
+          thread: {
+            id: "provider-thread-1",
+            title: "Current thread title fallback",
           },
         },
       } satisfies ProviderEvent);
 
-      const firstEvent = yield* Fiber.join(firstEventFiber);
-      assert.equal(firstEvent._tag, "Some");
-      if (firstEvent._tag !== "Some") {
-        return;
+      const events = Array.from(yield* Fiber.join(eventsFiber));
+      assert.equal(events[0]?.type, "thread.metadata.updated");
+      if (events[0]?.type === "thread.metadata.updated") {
+        assert.equal(events[0].payload.name, "Legacy thread name");
       }
-      assert.equal(firstEvent.value.type, "thread.token-usage.updated");
-      if (firstEvent.value.type !== "thread.token-usage.updated") {
-        return;
+      assert.equal(events[1]?.type, "thread.metadata.updated");
+      if (events[1]?.type === "thread.metadata.updated") {
+        assert.equal(events[1].payload.name, "Current thread name");
       }
-
-      assert.deepEqual(firstEvent.value.payload.usage, {
-        usedTokens: 126,
-        totalProcessedTokens: 11_839,
-        maxTokens: 258_400,
-        inputTokens: 120,
-        cachedInputTokens: 0,
-        outputTokens: 6,
-        reasoningOutputTokens: 0,
-        lastUsedTokens: 126,
-        lastInputTokens: 120,
-        lastCachedInputTokens: 0,
-        lastOutputTokens: 6,
-        lastReasoningOutputTokens: 0,
-        compactsAutomatically: true,
-      });
     }),
   );
 });

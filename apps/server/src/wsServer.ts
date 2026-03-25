@@ -631,31 +631,25 @@ export const createServer = Effect.fn(function* (): Effect.fn.Return<
         (project) => project.workspaceRoot === cwd && project.deletedAt === null,
       );
       let bootstrapProjectId: ProjectId;
-      let bootstrapProjectDefaultModelSelection;
+      let bootstrapProjectDefaultModel: string;
 
       if (!existingProject) {
         const createdAt = new Date().toISOString();
         bootstrapProjectId = ProjectId.makeUnsafe(crypto.randomUUID());
         const bootstrapProjectTitle = path.basename(cwd) || "project";
-        bootstrapProjectDefaultModelSelection = {
-          provider: "codex" as const,
-          model: "gpt-5-codex",
-        };
+        bootstrapProjectDefaultModel = "gpt-5-codex";
         yield* orchestrationEngine.dispatch({
           type: "project.create",
           commandId: CommandId.makeUnsafe(crypto.randomUUID()),
           projectId: bootstrapProjectId,
           title: bootstrapProjectTitle,
           workspaceRoot: cwd,
-          defaultModelSelection: bootstrapProjectDefaultModelSelection,
+          defaultModel: bootstrapProjectDefaultModel,
           createdAt,
         });
       } else {
         bootstrapProjectId = existingProject.id;
-        bootstrapProjectDefaultModelSelection = existingProject.defaultModelSelection ?? {
-          provider: "codex" as const,
-          model: "gpt-5-codex",
-        };
+        bootstrapProjectDefaultModel = existingProject.defaultModel ?? "gpt-5-codex";
       }
 
       const existingThread = snapshot.threads.find(
@@ -670,7 +664,7 @@ export const createServer = Effect.fn(function* (): Effect.fn.Return<
           threadId,
           projectId: bootstrapProjectId,
           title: "New thread",
-          modelSelection: bootstrapProjectDefaultModelSelection,
+          model: bootstrapProjectDefaultModel,
           interactionMode: DEFAULT_PROVIDER_INTERACTION_MODE,
           runtimeMode: "full-access",
           branch: null,

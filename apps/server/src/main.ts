@@ -107,7 +107,7 @@ export class CliConfig extends ServiceMap.Service<CliConfig, CliConfigShape>()(
 const CliEnvConfig = Config.all({
   mode: Config.string("T3CODE_MODE").pipe(
     Config.option,
-    Config.map(Option.map((value) => (value === "desktop" ? "desktop" : "web"))),
+    Config.map(Option.map((value) => (value === "desktop" || value === "tui" ? value : "web"))),
     Config.map(Option.getOrUndefined),
   ),
   port: Config.port("T3CODE_PORT").pipe(Config.option, Config.map(Option.getOrUndefined)),
@@ -145,7 +145,7 @@ const resolveOptionPrecedence = <Value>(
 
 const isValidPort = (value: number): boolean => value >= 1 && value <= 65_535;
 const isRuntimeMode = (value: string): value is RuntimeMode =>
-  value === "web" || value === "desktop";
+  value === "web" || value === "desktop" || value === "tui";
 
 const ServerConfigLive = (input: CliInput) =>
   Layer.effect(
@@ -187,7 +187,7 @@ const ServerConfigLive = (input: CliInput) =>
         {
           onSome: (value) => Effect.succeed(value),
           onNone: () => {
-            if (mode === "desktop") {
+            if (mode === "desktop" || mode === "tui") {
               return Effect.succeed(DEFAULT_PORT);
             }
             return findAvailablePort(DEFAULT_PORT);
@@ -226,7 +226,7 @@ const ServerConfigLive = (input: CliInput) =>
               Option.fromUndefinedOr(bootstrap.noBrowser),
             ),
           ),
-          () => mode === "desktop",
+          () => mode === "desktop" || mode === "tui",
         ),
       );
       const authToken = resolveOptionPrecedence(
@@ -267,7 +267,7 @@ const ServerConfigLive = (input: CliInput) =>
           Option.fromUndefinedOr(env.host),
           Option.flatMap(bootstrapEnvelope, (bootstrap) => Option.fromUndefinedOr(bootstrap.host)),
         ),
-        () => (mode === "desktop" ? "127.0.0.1" : undefined),
+        () => (mode === "desktop" || mode === "tui" ? "127.0.0.1" : undefined),
       );
 
       const config: ServerConfigShape = {
@@ -382,8 +382,10 @@ const makeServerProgram = (input: CliInput) =>
  * These flags mirrors the environment variables and the config shape.
  */
 
-const modeFlag = Flag.choice("mode", ["web", "desktop"]).pipe(
-  Flag.withDescription("Runtime mode. `desktop` keeps loopback defaults unless overridden."),
+const modeFlag = Flag.choice("mode", ["web", "desktop", "tui"]).pipe(
+  Flag.withDescription(
+    "Runtime mode. `desktop` and `tui` keep loopback defaults unless overridden.",
+  ),
   Flag.optional,
 );
 const portFlag = Flag.integer("port").pipe(

@@ -312,6 +312,21 @@ it.layer(testLayer)("server CLI command", (it) => {
     }),
   );
 
+  it.effect("uses fixed localhost defaults in tui mode", () =>
+    Effect.gen(function* () {
+      yield* runCli([], {
+        T3CODE_MODE: "tui",
+      });
+
+      assert.equal(findAvailablePort.mock.calls.length, 0);
+      assert.equal(start.mock.calls.length, 1);
+      assert.equal(resolvedConfig?.port, 3773);
+      assert.equal(resolvedConfig?.host, "127.0.0.1");
+      assert.equal(resolvedConfig?.mode, "tui");
+      assert.equal(resolvedConfig?.noBrowser, true);
+    }),
+  );
+
   it.effect("supports CLI and env for bootstrap/log websocket toggles", () =>
     Effect.gen(function* () {
       yield* runCli(["--auto-bootstrap-project-from-cwd"], {
