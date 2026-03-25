@@ -13,7 +13,9 @@ _T3Code, but in your terminal._
 </div>
 
 ```bash
-npx @maria_rcks/t1code
+bunx @maria_rcks/t1code
 ```
+
+<sub>Requires Bun.</sub>
 
 <sub>Based on T3 Code by [@t3dotgg](https://github.com/t3dotgg) and [@juliusmarminge](https://github.com/juliusmarminge).</sub>

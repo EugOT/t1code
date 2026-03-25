@@ -7,6 +7,6 @@ export default defineConfig({
   clean: true,
   noExternal: (id) => id.startsWith("@t3tools/"),
   banner: {
-    js: "#!/usr/bin/env node\n",
+    js: "#!/usr/bin/env bun\n",
   },
 });
