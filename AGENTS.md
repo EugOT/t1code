@@ -4,10 +4,13 @@
 
 - All of `bun fmt`, `bun lint`, and `bun typecheck` must pass before considering tasks completed.
 - NEVER run `bun test`. Always use `bun run test` (runs Vitest).
+- Use conventional commit messages that match the existing repo history, e.g. `fix(tui): reduce premature sidebar collapse`.
 
 ## Project Snapshot
 
-T3 Code is a minimal web GUI for using coding agents like Codex and Claude.
+T1Code is a terminal UI for using coding agents like Codex and Claude, and the main product surface lives in `apps/tui`.
+
+When a user reports UI issues without naming a surface, assume they mean the TUI in `apps/tui` unless they explicitly say web app/browser/React UI.
 
 This repository is a VERY EARLY WIP. Proposing sweeping changes that improve long-term maintainability is encouraged.
 
@@ -25,6 +28,7 @@ Long term maintainability is a core priority. If you add new functionality, firs
 
 ## Package Roles
 
+- `apps/tui`: Primary terminal UI. Default target for ambiguous UX/layout/polish requests unless the user explicitly asks for the web app.
 - `apps/server`: Node.js WebSocket server. Wraps Codex app-server (JSON-RPC over stdio), serves the React web app, and manages provider sessions.
 - `apps/web`: React/Vite UI. Owns session UX, conversation/event rendering, and client-side state. Connects to the server via WebSocket.
 - `packages/contracts`: Shared effect/Schema schemas and TypeScript contracts for provider events, WebSocket protocol, and model/session types. Keep this package schema-only — no runtime logic.
