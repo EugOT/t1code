@@ -1223,6 +1223,15 @@ function branchTriggerLabel(input: {
   return branch;
 }
 
+function resolveThreadGitSyncKey(
+  thread: Pick<ThreadReadModel, "updatedAt" | "branch" | "worktreePath"> | null,
+): string | null {
+  if (!thread) {
+    return null;
+  }
+  return `${thread.updatedAt}:${thread.branch ?? ""}:${thread.worktreePath ?? ""}`;
+}
+
 function resolvePreferredEditor(availableEditors: readonly EditorId[]): EditorId | null {
   return availableEditors[0] ?? null;
 }
@@ -2515,6 +2524,8 @@ export function App({
   const deferredComposerSyncRef = useRef(createDeferredComposerSyncState());
   const timelineScrollRef = useRef<ScrollBoxRenderable | null>(null);
   const composerBranchScrollRef = useRef<ScrollBoxRenderable | null>(null);
+  const gitRefreshInFlightRef = useRef(false);
+  const gitRefreshQueuedRef = useRef(false);
   const [imagePasteInFlight, setImagePasteInFlight] = useState(false);
   const sendInFlightRef = useRef(false);
   const interruptInFlightRef = useRef(false);
@@ -3050,6 +3061,7 @@ export function App({
   const activeThreadIsRunning = activeThread?.session?.status === "running";
   const activeThreadBranch = activeThread?.branch ?? activeDraftThread?.branch ?? null;
   const activeWorktreePath = activeThread?.worktreePath ?? activeDraftThread?.worktreePath ?? null;
+  const activeThreadGitSyncKey = resolveThreadGitSyncKey(activeThread);
   const activeProjectCwd = activeProject?.workspaceRoot ?? null;
   const hasServerThread = activeThread !== null;
   const effectiveThreadEnvMode = resolveEffectiveThreadEnvMode({
@@ -6493,6 +6505,11 @@ export function App({
       setGitStateError(null);
       return;
     }
+    if (gitRefreshInFlightRef.current) {
+      gitRefreshQueuedRef.current = true;
+      return;
+    }
+    gitRefreshInFlightRef.current = true;
     try {
       const [statusResult, branchResult] = await Promise.all([
         api.git.status({ cwd: gitCwd }),
@@ -6505,12 +6522,25 @@ export function App({
       setGitStatus(null);
       setGitBranchList(null);
       setGitStateError(error instanceof Error ? error.message : "Git status unavailable.");
+    } finally {
+      gitRefreshInFlightRef.current = false;
+      if (gitRefreshQueuedRef.current) {
+        gitRefreshQueuedRef.current = false;
+        void refreshGitState();
+      }
     }
   }, [api, gitCwd]);
 
   useEffect(() => {
     void refreshGitState();
   }, [refreshGitState]);
+
+  useEffect(() => {
+    if (!activeThreadGitSyncKey || !gitCwd) {
+      return;
+    }
+    void refreshGitState();
+  }, [activeThreadGitSyncKey, gitCwd, refreshGitState]);
 
   useEffect(() => {
     if (!api) {
